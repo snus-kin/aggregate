@@ -63,7 +63,7 @@ proc createPostsRouter*(db: DbConn) =
           # all is good
           resp Http200
         else:
-          # must be authed
+          # must have auth part
           resp Http400
       except JsonParsingError, KeyError:
         # if we can't parse it's a bad request
