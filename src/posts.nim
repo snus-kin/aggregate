@@ -2,8 +2,6 @@ import json
 import db_sqlite
 import jester
 
-export posts
-
 proc parse*(post: seq[string]): JsonNode =
   ## Parse a post from a database return value
   result = %* {
