@@ -10,32 +10,34 @@ routes:
   get "/posts/list.json":
     ## GET a list of the posts, we should sort by timestamp
     # unauthed
-    let posts = db.getAllRows(sql"SELECT * FROM posts ORDER BY time DESC")
+    let posts = db.getAllRows(sql"""SELECT username, title, description, link, time 
+                                    FROM posts ORDER BY time DESC""")
     var jsonPosts: seq[JsonNode]
     for post in posts:
       var jsonPost = %* {
-        "id": post[0],
-        "name": post[1],
+        "username": post[0],
+        "title": post[1],
         "description": post[2],
-        "time": post[3]
+        "link": post[3],
+        "time": post[4]
       }
       echo pretty jsonPost
       jsonPosts.add jsonPost
-    
     let jsonBody = %* jsonPosts
     resp jsonBody
 
   get "/posts/latest.json":
     ## GET the latest post
     # unauthed
-    let post = db.getRow(sql"SELECT * FROM posts ORDER BY time DESC")
+    let post = db.getRow(sql"""SELECT username, title, description, link, time 
+                               FROM posts ORDER BY time DESC""")
     var jsonPost = %* {
-      "id": post[0],
-      "name": post[1],
+      "username": post[0],
+      "title": post[1],
       "description": post[2],
-      "time": post[3]
+      "link": post[3],
+      "time": post[4]
     }
-
     resp jsonPost
 
   post "/posts/create.json":
@@ -44,7 +46,6 @@ routes:
     ## example body:
     ## ```json
     ## {
-    ##  "type": "link",
     ##  "title": "An Example Post",
     ##  "link": "https://link.com",
     ##  "description": "lorem ipsum"
@@ -55,11 +56,17 @@ routes:
         let token = request.headers["Authorization"]
         let username = db.getValue(sql"SELECT username FROM users WHERE token == ?", token)
         if username == "":
-          # No token with a username
+          # No token with a username, auth failed
           resp Http403
 
         echo pretty payload
-        db.exec(sql""" INSERT INTO posts (name, description) VALUES (?, ?)""", payload["title"], payload["description"])
+        db.exec(sql"""INSERT INTO posts 
+                      (username, title, link, description) 
+                      VALUES (?, ?, ?, ?)""", 
+                      username, 
+                      payload["title"],
+                      payload["link"],
+                      payload["description"])
         # all is good
         resp Http200
       else:
