@@ -77,4 +77,5 @@ proc createPostsRouter*(db: DbConn) =
         if username == "":
           # No token with a username, auth failed
           resp Http403
-      resp "Not Implemented"
+      
+      resp Http400

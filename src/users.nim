@@ -16,7 +16,7 @@ proc recreateToken*(pass: string, salt: string): string =
 proc createUsersRouter*(db: DbConn) =
   router users:
     get "/users/validate.json":
-      ## put a username & pass in and get the token back
+      ## GET a token with username & password
       try:
         let user: string = request.params["username"]
         let pass: string = request.params["password"]
@@ -33,6 +33,7 @@ proc createUsersRouter*(db: DbConn) =
         resp Http400
 
     post "/users/create.json":
+      ## POST to create a new 'user' token can be saved or use validate for the token
       try:
         let payload = parseJson(request.body)
         let token = makeToken(payload["password"].getStr)
@@ -44,6 +45,28 @@ proc createUsersRouter*(db: DbConn) =
         resp jsonBody
       except JsonParsingError, KeyError:
         resp Http400
+    
+    put "/users/newToken.json":
+      ## take user, token in auth, new pass return new token
+      if request.headers.hasKey("Authorization"):
+        let token = request.headers["Authorization"]
+        let username = db.getValue(sql"SELECT username FROM users WHERE token == ?", token)
+        if username == "":
+          # No token with a username, auth failed
+          resp Http403
+        let new = makeToken(request.params["new_password"])
+        db.exec(sql"UPDATE users SET token = ?, salt = ? WHERE username = ?", new[0], new[1], username)
+        resp "Not implemented"
+      resp Http400
 
     delete "/users/delete.json":
-      resp "Not implemented"
+      ## remove user from db auth with token
+      if request.headers.hasKey("Authorization"):
+        let token = request.headers["Authorization"]
+        let username = db.getValue(sql"SELECT username FROM users WHERE token == ?", token)
+        if username == "":
+          # No token with a username, auth failed
+          resp Http403
+        db.exec(sql"DELETE FROM users WHERE username == ?", username)
+        resp Http200
+      resp Http400
