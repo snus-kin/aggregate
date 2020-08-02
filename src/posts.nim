@@ -57,9 +57,9 @@ proc createPostsRouter*(db: DbConn) =
                         (username, title, link, description) 
                         VALUES (?, ?, ?, ?)""", 
                         username, 
-                        payload["title"],
-                        payload["link"],
-                        payload{"description"})
+                        payload["title"].getStr,
+                        payload["link"].getStr,
+                        payload{"description"}.getStr)
           # all is good
           resp Http200
         else:
