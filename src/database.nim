@@ -13,5 +13,3 @@ proc makeTables*(db: DbConn): void =
                    username TEXT NOT NULL UNIQUE,
                    salt TEXT NOT NULL
                 )""")
-# db.exec(sql"INSERT INTO posts (username, title, link, description) VALUES ('testUSER1', 'test', 'https://snufk.in', 'testdesc')")
-# db.exec(sql"INSERT INTO posts (username, title, link, description) VALUES ('testUSER2', 'test2', 'https://snufk.in/blog', 'testdesc2')")

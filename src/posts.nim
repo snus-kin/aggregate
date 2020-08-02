@@ -25,7 +25,8 @@ proc createPostsRouter*(db: DbConn) =
         jsonPosts.add parse(post)
 
       let jsonBody = %* {"posts": jsonPosts}
-      resp jsonBody
+      
+      resp Http200, {"Access-Control-Allow-Origin": "*", "Content-Type": "application/json"}, $jsonBody
 
     get "/posts/latest.json":
       ## GET the latest post
