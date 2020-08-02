@@ -1,0 +1,13 @@
+.body {
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
+}
+
+#content {
+    flex-basis: 66%;
+}
+
+.side {
+    flex-basis: 33%;
+}

@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title> Aggregate Client </title>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js"></script>
+    </head>
+    <body>
+        <div class="body">
+            <div id="content">
+            </div>
+
+            <div class="side">
+                <!-- hide this if not logged in -->
+                <div class="post" style="display: none">
+                    <h3> Post </h3>
+                    <form id="post">
+                        <input type="text" id="title" name="title" placeholder="title"><br>
+                        <input type="text" id="link" name="link" placeholder="link"><br>
+                        <textarea placeholder="description" name="description" cols="50" rows="10"></textarea><br>
+                        <input type="submit" value="Post">
+                    </form>
+                </div> 
+                <div class="login">
+                    <h3> Login </h3>
+                    <form id="login">
+                        <input type="text" id="username" name="username" placeholder="username"><br>
+                        <input type="password" id="password" name="password" placeholder="password"><br>
+                        <input type="submit" value="Log in">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
