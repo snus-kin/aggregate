@@ -1,3 +1,7 @@
+const postForm = document.querySelector("#post");
+const loginForm = document.querySelector("#loginForm");
+const contentElem = document.querySelector("#content");
+
 var HttpClient = function() {
     this.get = function(aUrl, aCallback) {
         var anHttpRequest = new XMLHttpRequest();
@@ -11,17 +15,17 @@ var HttpClient = function() {
     }
 }
 
-function logIn(username, password) {
-    console.log(username)
-    console.log(password)
+function logIn(event) {
+    console.log(event)
+    event.preventDefault();
 }
+
+loginForm.addEventListener('submit', logIn);
 
 var client = new HttpClient();
 client.get("http://0.0.0.0:5000/posts/list.json", function(response) {
-    var contentElem = document.querySelector("#content");
     var content = JSON.parse(response);
     var contentHtml = "";
-
     for(var i = 0; i < content.posts.length; i++) {
         var obj = content.posts[i];
         contentHtml += "<h1>" + obj.title + "</h1>\n";
@@ -29,6 +33,5 @@ client.get("http://0.0.0.0:5000/posts/list.json", function(response) {
         contentHtml += "<h3>" + obj.username + "</h3>\n";
         contentHtml += "<hr>\n";
     }
-
     contentElem.innerHTML = contentHtml;
 })
