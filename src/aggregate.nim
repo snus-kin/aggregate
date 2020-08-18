@@ -4,7 +4,7 @@ import db_sqlite
 import jester
 
 import config, database
-import posts, users
+import api/[posts, users]
 
 const dbPath {.strdefine.} = "./posts.db"
 const cfgFile {.strdefine.} = "./aggregate.conf"
